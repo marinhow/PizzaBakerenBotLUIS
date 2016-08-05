@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace PizzaBakerenBotLUIS
 {
+    //LUIS MODEL: https://www.luis.ai/application/39d3d817-ef26-423a-8f01-2e0639acc3a8
     [LuisModel("39d3d817-ef26-423a-8f01-2e0639acc3a8", "8e15977e64d64c4884260b3d70d442ae")]
     [Serializable]
     class PizzaOrderDialog : LuisDialog<PizzaOrder>
