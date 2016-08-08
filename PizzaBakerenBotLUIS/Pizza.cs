@@ -10,72 +10,86 @@ namespace PizzaBakerenBotLUIS
     {
         // 0 value in enums is reserved for unknown values.  Either you can supply an explicit one or start enumeration at 1.
         Unknown,
+        [Terms(new string[] { "small" })]
+        Small,
         [Terms(new string[] { "med", "medium" })]
         Medium,
-        Large,
-
-        [Terms(new string[] { "family", "extra large" })]
-        Family
+        [Terms(new string[] { "large", "big" })]
+        Large
     };
     public enum PizzaOptions
     {
-        Unkown, SignaturePizza, GourmetDelitePizza, StuffedPizza,
-
-        [Terms(new string[] { "byo", "build your own" })]
-        [Describe("Build your own")]
-        BYOPizza
+        Unkown, salami, cheese, pepperoni
     };
-    public enum SignatureOptions { Hawaiian = 1, Pepperoni, MurphysCombo, ChickenGarlic, TheCowboy };
-    public enum GourmetDeliteOptions { SpicyFennelSausage = 1, AngusSteakAndRoastedGarlic, GourmetVegetarian, ChickenBaconArtichoke, HerbChickenMediterranean };
-    public enum StuffedOptions { ChickenBaconStuffed = 1, ChicagoStyleStuffed, FiveMeatStuffed };
+
+    public enum DrinkOptions
+    {
+        Unkown,
+        [Terms(new string[] { "cola", "coca cola","coca-cola" })]
+        CocaCola,
+        Beer,
+        [Terms(new string[] { "red wine", "white wine" })]
+        Wine,
+        Water
+    };
+
+    public enum PizzaDressingOptions
+    {
+        Unkown, Garlic, Salsa, Mayonese
+    };
+
+
+    //public enum SignatureOptions { Hawaiian = 1, Pepperoni, MurphysCombo, ChickenGarlic, TheCowboy };
+    //public enum GourmetDeliteOptions { SpicyFennelSausage = 1, AngusSteakAndRoastedGarlic, GourmetVegetarian, ChickenBaconArtichoke, HerbChickenMediterranean };
+    //public enum StuffedOptions { ChickenBaconStuffed = 1, ChicagoStyleStuffed, FiveMeatStuffed };
 
     // Fresh Pan is large pizza only
-    public enum CrustOptions
-    {
-        Original = 1, Thin, Stuffed, FreshPan, GlutenFree
-    };
+    //public enum CrustOptions
+    //{
+    //    Original = 1, Thin, Stuffed, FreshPan, GlutenFree
+    //};
 
-    public enum SauceOptions
-    {
-        [Terms(new string[] { "traditional", "tomatoe?" })]
-        Traditional = 1,
-        CreamyGarlic, OliveOil
-    };
+    //public enum SauceOptions
+    //{
+    //    [Terms(new string[] { "traditional", "tomatoe?" })]
+    //    Traditional = 1,
+    //    CreamyGarlic, OliveOil
+    //};
 
-    public enum ToppingOptions
-    {
-        Beef = 1,
-        BlackOlives,
-        CanadianBacon,
-        CrispyBacon,
-        Garlic,
-        GreenPeppers,
-        GrilledChicken,
+    //public enum ToppingOptions
+    //{
+    //    Beef = 1,
+    //    BlackOlives,
+    //    CanadianBacon,
+    //    CrispyBacon,
+    //    Garlic,
+    //    GreenPeppers,
+    //    GrilledChicken,
 
-        [Terms(new string[] { "herb & cheese", "herb and cheese", "herb and cheese blend", "herb" })]
-        HerbAndCheeseBlend,
-        ItalianSausage,
-        MixedOnions,
-        MozzarellaCheese,
-        Mushroom,
-        Onions,
-        ParmesanCheese,
-        Pepperoni,
-        Pineapple,
-        Salami,
-        Spinach,
-        ExtraCheese
-    };
+    //    [Terms(new string[] { "herb & cheese", "herb and cheese", "herb and cheese blend", "herb" })]
+    //    HerbAndCheeseBlend,
+    //    ItalianSausage,
+    //    MixedOnions,
+    //    MozzarellaCheese,
+    //    Mushroom,
+    //    Onions,
+    //    ParmesanCheese,
+    //    Pepperoni,
+    //    Pineapple,
+    //    Salami,
+    //    Spinach,
+    //    ExtraCheese
+    //};
 
-    public enum CouponOptions { Large20Percent = 1, Pepperoni20Percent };
+    //public enum CouponOptions { Large20Percent = 1, Pepperoni20Percent };
 
-    [Serializable]
-    class BYOPizza
-    {
-        public CrustOptions Crust;
-        public SauceOptions Sauce;
-        public List<ToppingOptions> Toppings = new List<ToppingOptions>();
-    };
+    //[Serializable]
+    //class BYOPizza
+    //{
+    //    public CrustOptions Crust;
+    //    public SauceOptions Sauce;
+    //    public List<ToppingOptions> Toppings = new List<ToppingOptions>();
+    //};
 
     [Serializable]
     class PizzaOrder
@@ -85,18 +99,20 @@ namespace PizzaBakerenBotLUIS
         [Template(TemplateUsage.NotUnderstood, "What does \"{0}\" mean???")]
         [Describe("Kind of pizza")]
         public PizzaOptions Kind;
-        public SignatureOptions Signature;
-        public GourmetDeliteOptions GourmetDelite;
-        public StuffedOptions Stuffed;
-        public BYOPizza BYO;
+        public DrinkOptions Drink;
+        public PizzaDressingOptions Dressing;
+        //public SignatureOptions Signature;
+        //public GourmetDeliteOptions GourmetDelite;
+        //public StuffedOptions Stuffed;
+        //public BYOPizza BYO;
         public string Address;
-        [Optional]
-        public CouponOptions Coupon;
+        //[Optional]
+        //public CouponOptions Coupon;
 
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.AppendFormat("You want a {0} {1}", Size, Kind);
+            builder.AppendFormat("You want a {0} {1}. {2} to drink. Order will be sent to {3}.", Size, Kind, Drink, Dressing ,Address);
             //builder.AppendFormat("PizzaOrder({0}, ", Size);
             //switch (Kind)
             //{
@@ -118,7 +134,7 @@ namespace PizzaBakerenBotLUIS
             //        builder.AppendFormat("{0}, {1}", Kind, Stuffed);
             //        break;
             //}
-            //builder.AppendFormat(", {0}, {1})", Address, Coupon);
+            //builder.AppendFormat(", {0}, {1})", Address);
             return builder.ToString();
         }
     };

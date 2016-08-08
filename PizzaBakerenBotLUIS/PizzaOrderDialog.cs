@@ -36,7 +36,7 @@ namespace PizzaBakerenBotLUIS
             //PizzaSize
             //PizzaName
             //PizzaSauce
-            //Drink
+            //DrinkOptions
 
 
 
@@ -64,12 +64,30 @@ namespace PizzaBakerenBotLUIS
             //    }
             //}
             var order = new PizzaOrder();
+            
+
+            foreach (var entity in result.Entities)
+            {
+              
+                switch (entity.Type)
+                {
+                    case "PizzaName": order.Kind = PizzaOptions.cheese;break;
+                    case "PizzaSize": order.Size = SizeOptions.Small;break;
+                    case "PizzaDressing": order.Dressing = PizzaDressingOptions.Garlic; break;
+                    case "DrinkOptions": order.Drink = DrinkOptions.Beer; break;
+                    default:break;
+                }
+
+            }
+
             order.Size = SizeOptions.Large;
-            order.Kind = PizzaOptions.StuffedPizza;
+            //order.Kind = PizzaOptions.StuffedPizza;
             await context.PostAsync("Your Pizza Order: " + order.ToString());
-            //var pizzaForm = new FormDialog<PizzaOrder>(order, this.MakePizzaForm, FormOptions.PromptInStart, entities);
-            //context.Call<PizzaOrder>(pizzaForm, PizzaFormComplete);
+
+            var pizzaForm = new FormDialog<PizzaOrder>(order, this.MakePizzaForm, FormOptions.PromptInStart, entities);
+            context.Call<PizzaOrder>(pizzaForm, PizzaFormComplete);
         }
+
 
         //[LuisIntent("OrderPizza")]
         //[LuisIntent("UseCoupon")]
