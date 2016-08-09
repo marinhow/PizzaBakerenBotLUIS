@@ -38,7 +38,7 @@ namespace Microsoft.Bot.Connector
         /// <summary>
         /// Gets or sets json deserialization settings.
         /// </summary>
-        public JsonSerializerSettings DeserializationSettings { get; private set; }        
+        public JsonSerializerSettings DeserializationSettings { get; private set; }
 
         /// <summary>
         /// Subscription credentials which uniquely identify client subscription.
