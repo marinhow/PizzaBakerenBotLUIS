@@ -1,15 +1,16 @@
-﻿using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.FormFlow;
-using Microsoft.Bot.Builder.Luis;
-using Microsoft.Bot.Builder.Luis.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Builder.Luis;
+using Newtonsoft.Json;
+using Microsoft.Bot.Builder.Luis.Models;
+
 namespace PizzaBakerenBotLUIS
 {
-    //LUIS MODEL: https://www.luis.ai/application/39d3d817-ef26-423a-8f01-2e0639acc3a8
     [LuisModel("39d3d817-ef26-423a-8f01-2e0639acc3a8", "8e15977e64d64c4884260b3d70d442ae")]
     [Serializable]
     class PizzaOrderDialog : LuisDialog<PizzaOrder>
@@ -28,63 +29,42 @@ namespace PizzaBakerenBotLUIS
             context.Wait(MessageReceived);
         }
 
+        [LuisIntent("Menu")]
+
         [LuisIntent("Order")]
-        public async Task ProcessOrder(IDialogContext context, LuisResult result)
+        public async Task ProcessPizzaForm(IDialogContext context, LuisResult result)
         {
             var entities = new List<EntityRecommendation>(result.Entities);
-
-            //PizzaSize
-            //PizzaName
-            //PizzaSauce
-            //DrinkOptions
-
-
-
-
-            //if (!entities.Any((entity) => entity.Type == "Kind"))
-            //{
-            //    //Infer kind
-            //    foreach (var entity in result.Entities)
-            //    {
-            //        string kind = null;
-            //        switch (entity.Type)
-            //        {
-            //            case "Signature": kind = "Signature"; break;
-            //            case "GourmetDelite": kind = "Gourmet delite"; break;
-            //            case "Stuffed": kind = "stuffed"; break;
-            //            default:
-            //                if (entity.Type.StartsWith("BYO")) kind = "byo";
-            //                break;
-            //        }
-            //        if (kind != null)
-            //        {
-            //            entities.Add(new EntityRecommendation(type: "Kind") { Entity = kind });
-            //            break;
-            //        }
-            //    }
-            //}
-            var order = new PizzaOrder();
-            
-
-            foreach (var entity in result.Entities)
+            if (!entities.Any((entity) => (entity.Type == "PizzaName" ))
             {
-              
-                switch (entity.Type)
-                {
-                    case "PizzaName": order.Kind = PizzaOptions.cheese;break;
-                    case "PizzaSize": order.Size = SizeOptions.Small;break;
-                    case "PizzaDressing": order.Dressing = PizzaDressingOptions.Garlic; break;
-                    case "DrinkOptions": order.Drink = DrinkOptions.Beer; break;
-                    default:break;
-                }
+                string kind = "Signature";
+                string PizzaName = entities.
+                string PizzaSize = null;
+                string PizzaDressing = null;
+                string DrinkOptions = null;
 
+                // Infer kind
+                //foreach (var entity in result.Entities)
+                //{
+                //    string kind = null;
+                //    switch (entity.Type)
+                //    {
+                //        case "Signature": kind = "Signature"; break;
+                //        //case "GourmetDelite": kind = "Gourmet delite"; break;
+                //        //case "Stuffed": kind = "stuffed"; break;
+                //        default:
+                //            if (entity.Type.StartsWith("BYO")) kind = "byo";
+                //            break;
+                //    }
+                //    if (kind != null)
+                //    {
+                //        entities.Add(new EntityRecommendation(type: "Kind") { Entity = kind });
+                //        break;
+                //    }
+                //}
             }
 
-            order.Size = SizeOptions.Large;
-            //order.Kind = PizzaOptions.StuffedPizza;
-            await context.PostAsync("Your Pizza Order: " + order.ToString());
-
-            var pizzaForm = new FormDialog<PizzaOrder>(order, this.MakePizzaForm, FormOptions.PromptInStart, entities);
+            var pizzaForm = new FormDialog<PizzaOrder>(new PizzaOrder(), this.MakePizzaForm, FormOptions.PromptInStart, entities);
             context.Call<PizzaOrder>(pizzaForm, PizzaFormComplete);
         }
 
@@ -96,7 +76,7 @@ namespace PizzaBakerenBotLUIS
         //    var entities = new List<EntityRecommendation>(result.Entities);
         //    if (!entities.Any((entity) => entity.Type == "Kind"))
         //    {
-        //         Infer kind
+        //        // Infer kind
         //        foreach (var entity in result.Entities)
         //        {
         //            string kind = null;
@@ -148,35 +128,32 @@ namespace PizzaBakerenBotLUIS
 
         enum Days { Saturday, Sunday, Monday, Tuesday, Wednesday, Thursday, Friday };
 
-        //[LuisIntent("StoreHours")]
-        //public async Task ProcessStoreHours(IDialogContext context, LuisResult result)
-        //{
-        //    var days = (IEnumerable<Days>)Enum.GetValues(typeof(Days));
+        [LuisIntent("StoreHours")]
+        public async Task ProcessStoreHours(IDialogContext context, LuisResult result)
+        {
+            var days = (IEnumerable<Days>)Enum.GetValues(typeof(Days));
 
-        //    PromptDialog.Choice(context, StoreHoursResult, days, "Which day of the week?");
-        //}
+            PromptDialog.Choice(context, StoreHoursResult, days, "Which day of the week?");
+        }
 
+        private async Task StoreHoursResult(IDialogContext context, IAwaitable<Days> day)
+        {
+            var hours = string.Empty;
+            switch (await day)
+            {
+                case Days.Saturday:
+                case Days.Sunday:
+                    hours = "5pm to 11pm";
+                    break;
+                default:
+                    hours = "11am to 10pm";
+                    break;
+            }
 
+            var text = $"Store hours are {hours}";
+            await context.PostAsync(text);
 
-
-        //private async Task StoreHoursResult(IDialogContext context, IAwaitable<Days> day)
-        //{
-        //    var hours = string.Empty;
-        //    switch (await day)
-        //    {
-        //        case Days.Saturday:
-        //        case Days.Sunday:
-        //            hours = "5pm to 11pm";
-        //            break;
-        //        default:
-        //            hours = "11am to 10pm";
-        //            break;
-        //    }
-
-        //    var text = $"Store hours are {hours}";
-        //    await context.PostAsync(text);
-
-        //    context.Wait(MessageReceived);
-        //}
+            context.Wait(MessageReceived);
+        }
     }
 }

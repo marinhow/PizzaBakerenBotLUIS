@@ -43,6 +43,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Bot.Builder, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Downloads\BotBuilder-master\CSharp\Library\bin\Release\Microsoft.Bot.Builder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bot.Connector, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Downloads\BotBuilder-master\CSharp\Library\Microsoft.Bot.Connector\bin\Release\Microsoft.Bot.Connector.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Rest.ClientRuntime.1.8.2\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
@@ -106,6 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\InmetaBots - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\InmetaBots - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\InmetaBotSample - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\InmetaBotSample - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
@@ -114,18 +124,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Library\Microsoft.Bot.Builder.csproj">
-      <Project>{cdfec7d6-847e-4c13-956b-0a960ae3eb60}</Project>
-      <Name>Microsoft.Bot.Builder</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Bot.Connector\Microsoft.Bot.Connector.csproj">
-      <Project>{df397efc-91db-4911-9971-c509926fc288}</Project>
-      <Name>Microsoft.Bot.Connector</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
