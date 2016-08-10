@@ -33,7 +33,7 @@ namespace PizzaBakerenBotLUIS
                 //.Field(nameof(PizzaOrder.Signature), isSignature)
                 //.Field(nameof(PizzaOrder.Stuffed), isStuffed)
                 .AddRemainingFields()
-                .Confirm("Would you like a {Size} {Kind} pizza?")
+                .Confirm("Would you like a {Size} {PizzaName} pizza? Please confirm with 'yes' or to change options 'no'" )
                 //.Confirm("Would you like a {Size}, {BYO.Crust} crust, {BYO.Sauce}, {BYO.Toppings} pizza?", isBYO)
                 //.Confirm("Would you like a {Size}, {&Signature} {Signature} pizza?", isSignature, dependencies: new string[] { "Size", "Kind", "Signature" })
                 //.Confirm("Would you like a {Size}, {&GourmetDelite} {GourmetDelite} pizza?", isGourmet)

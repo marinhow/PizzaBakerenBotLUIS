@@ -29,7 +29,20 @@ namespace PizzaBakerenBotLUIS
         Chicken
     };
 
+    public enum DrinkOptions
+    {
+        [Terms(new string[] { "coke", "cocacola","cola" })]
+        CocaCola = 1,
+        [Terms(new string[] { "icetea","tea" })]
+        IceTea
+    };
 
+    public enum PizzaDressing
+    {
+        Garlic = 1,
+        Aioli,
+        Chili
+    };
 
 
     [Serializable]
@@ -40,9 +53,8 @@ namespace PizzaBakerenBotLUIS
         [Describe("Kind of pizza")]
         public PizzaOptions PizzaName;
         public SizeOptions Size;
-
-        
-
+        public PizzaDressing Dressing;
+        public DrinkOptions Drinks;
         public string PhoneNumber;
         public string Address;
 
@@ -52,7 +64,7 @@ namespace PizzaBakerenBotLUIS
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.AppendFormat("PizzaOrder({0}, ", Size);
+            builder.AppendFormat("We will delivered a {0} {1} pizza with {2} and {3} at {4} in 25 minutes! In case of emergency we will call {5}. Thanks and bye bye.", Size, PizzaName, Dressing,Drinks,Address, PhoneNumber);
             //switch (Kind)
             //{
             //    case PizzaOptions.BYOPizza:
@@ -73,7 +85,7 @@ namespace PizzaBakerenBotLUIS
             //        builder.AppendFormat("{0}, {1}", Kind, Stuffed);
             //        break;
             //}
-            builder.AppendFormat(", {0}, {1})", Address, PhoneNumber);
+            //builder.AppendFormat(", {0}, {1})", Address, PhoneNumber);
             return builder.ToString();
         }
     };
