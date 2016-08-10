@@ -30,39 +30,49 @@ namespace PizzaBakerenBotLUIS
         }
 
         [LuisIntent("Menu")]
+        public async Task ProcessMenuForm(IDialogContext context, LuisResult result)
+        {
+            var entities = new List<EntityRecommendation>(result.Entities);
+
+        }
 
         [LuisIntent("Order")]
         public async Task ProcessPizzaForm(IDialogContext context, LuisResult result)
         {
             var entities = new List<EntityRecommendation>(result.Entities);
-            if (!entities.Any((entity) => (entity.Type == "PizzaName" ))
-            {
-                string kind = "Signature";
-                string PizzaName = entities.
-                string PizzaSize = null;
-                string PizzaDressing = null;
-                string DrinkOptions = null;
 
-                // Infer kind
-                //foreach (var entity in result.Entities)
-                //{
-                //    string kind = null;
-                //    switch (entity.Type)
-                //    {
-                //        case "Signature": kind = "Signature"; break;
-                //        //case "GourmetDelite": kind = "Gourmet delite"; break;
-                //        //case "Stuffed": kind = "stuffed"; break;
-                //        default:
-                //            if (entity.Type.StartsWith("BYO")) kind = "byo";
-                //            break;
-                //    }
-                //    if (kind != null)
-                //    {
-                //        entities.Add(new EntityRecommendation(type: "Kind") { Entity = kind });
-                //        break;
-                //    }
-                //}
-            }
+    
+            string PizzaName = entities.FirstOrDefault(e => e.Type.Equals("PizzaName")).Entity;
+            string PizzaSize = entities.FirstOrDefault(e => e.Type.Equals("PizzaSize")).Entity;
+            string PizzaDressing = entities.FirstOrDefault(e => e.Type.Equals("PizzaDressing")).Entity;
+            //string DrinkOptions = entities.FirstOrDefault(e => e.Type.Equals("DrinkOptions")).Entity;
+
+
+            entities.Add(new EntityRecommendation(type: "PizzaName") { Entity = PizzaName });
+            entities.Add(new EntityRecommendation(type: "Size") { Entity = PizzaSize });
+            entities.Add(new EntityRecommendation(type: "Size") { Entity = PizzaSize });
+
+            // Infer kind
+            //foreach (var entity in result.Entities)
+            //{
+            //    string kind = null;
+            //    switch (entity.Type)
+            //    {
+            //        case "Signature": kind = "Signature"; break;
+            //        //case "GourmetDelite": kind = "Gourmet delite"; break;
+            //        //case "Stuffed": kind = "stuffed"; break;
+            //        default:
+            //            if (entity.Type.StartsWith("BYO")) kind = "byo";
+            //            break;
+            //    }
+            //    if (kind != null)
+            //    {
+            //        entities.Add(new EntityRecommendation(type: "Kind") { Entity = kind });
+            //        break;
+            //    }
+            //}
+
+
 
             var pizzaForm = new FormDialog<PizzaOrder>(new PizzaOrder(), this.MakePizzaForm, FormOptions.PromptInStart, entities);
             context.Call<PizzaOrder>(pizzaForm, PizzaFormComplete);
