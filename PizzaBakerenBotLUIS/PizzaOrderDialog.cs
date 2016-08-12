@@ -29,6 +29,50 @@ namespace PizzaBakerenBotLUIS
             context.Wait(MessageReceived);
         }
 
+        [LuisIntent("Login")]
+        public async Task ProcessLoginWithPhoneNumber(IDialogContext context, LuisResult result)
+        {
+            try
+            {
+                var entities = new List<EntityRecommendation>(result.Entities);
+                var UserNumber = entities.FirstOrDefault(i => i.Type.Equals("PhoneNumber")).Entity;
+                int number;
+                var ValidUsers = new List<Customer>();
+                string[] lines = System.IO.File.ReadAllLines(@"Users.txt");
+                foreach (string line in lines)
+                {
+                    string[] vals = line.Split(new char[] { ';' });
+                    ValidUsers.Add(new Customer(line[0].ToString(), line[1].ToString(), line[2].ToString()));
+                }
+
+                if (int.TryParse(UserNumber, out number))
+                {
+
+                    var existsUser = ValidUsers.Exists(x => x.PhoneNumber.Equals(UserNumber));
+
+                    if (existsUser)
+                        await context.PostAsync(string.Format("Welcome back {0}!", ValidUsers.First(x => x.PhoneNumber.Equals(UserNumber)).Name));
+                    else
+                        await context.PostAsync("New user! You need to register first!");
+
+                }
+                else
+                {
+                    await context.PostAsync(string.Format("Your Phone Number is: {0}", result.Entities[0].Entity));
+                }
+            }
+            catch (Exception exp)
+            {
+                await context.PostAsync("Ohhh noooo!!! I'm stuck here. " + exp.Message);
+            }
+        }
+
+        [LuisIntent("Cancel")]
+        public async Task ProcessCancel(IDialogContext context, LuisResult result)
+        {
+            await context.PostAsync("Order canceled!");
+        }
+
         [LuisIntent("Menu")]
         public async Task ProcessMenuForm(IDialogContext context, LuisResult result)
         {
@@ -41,7 +85,7 @@ namespace PizzaBakerenBotLUIS
                 default: await context.PostAsync("Sorry, I'm having an hard time to understand you. This is what you can choose:"); break;
             }
 
- 
+
             context.Wait(MessageReceived);
 
         }
@@ -202,5 +246,20 @@ namespace PizzaBakerenBotLUIS
 
             context.Wait(MessageReceived);
         }
+    }
+
+    public class Customer
+    {
+        public Customer(string pn, string n, string a)
+        {
+            PhoneNumber = pn;
+            Name = n;
+            Address = a;
+        }
+
+        public string PhoneNumber { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+
     }
 }
